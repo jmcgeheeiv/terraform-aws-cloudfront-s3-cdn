@@ -113,14 +113,27 @@ module "cdn" {
 }
 ```
 
-### Generating ACM Certificate
+### Using an S3 Static Website Origin
 
-Use the AWS cli to [request new ACM certifiates](http://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request.html) (requires email validation)
+When variable `website_enabled` is set to `true`, the S3 origin is configured
+as a static website. The S3 static website has the advantage of redirecting
+URL `subdir/` to `subdir/index.html` without requiring a
+[Lambda@Edge function to perform the redirection](https://aws.amazon.com/blogs/compute/implementing-default-directory-indexes-in-amazon-s3-backed-amazon-cloudfront-origins-using-lambdaedge/).
+The S3 static website responds only to CloudFront, preventing direct access to
+S3.
+
+In addition to setting `website_enabled=true`, you must also:
+
+* Specify at least one `aliases`, like `["example.com"]` or
+  `["example.com", "www.example.com"]`
+* Specify an ACM certificate
+
+### Generating an ACM Certificate
+
+Use the AWS CLI to [request new ACM certifiates](http://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request.html) (requires email validation)
 ```
 aws acm request-certificate --domain-name example.com --subject-alternative-names a.example.com b.example.com *.c.example.com
 ```
-
-
 
 __NOTE__:
 
@@ -455,6 +468,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [cliveza_avatar]: https://img.cloudposse.com/150x150/https://github.com/cliveza.png
   [dmattia_homepage]: https://github.com/dmattia
   [dmattia_avatar]: https://img.cloudposse.com/150x150/https://github.com/dmattia.png
+  [jmcgeheeiv_homepage]: https://github.com/jmcgeheeiv
+  [jmcgeheeiv_avatar]: https://img.cloudposse.com/150x150/https://github.com/jmcgeheeiv.png
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]
